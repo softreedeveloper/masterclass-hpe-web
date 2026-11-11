@@ -1,0 +1,8 @@
+---
+import AppLayout from "../layouts/AppLayout.astro";
+import CuentaApp from "../components/cuenta/CuentaApp";
+---
+
+<AppLayout title="Mi cuenta">
+   <CuentaApp client:only="react" />
+</AppLayout>

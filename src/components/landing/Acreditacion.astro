@@ -1,0 +1,39 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+// Iconografía discreta de reconocimiento digital, sin sellos académicos (diap. 24).
+---
+
+<section id="acreditacion" class="section bg-surface">
+   <div class="container-x">
+      <SectionHeader tag={t("acc-tag")} title={t("acc-title")} lead={t("acc-lead")} />
+      <div class="mx-auto mt-14 grid max-w-5xl gap-4 md:grid-cols-2">
+         {
+            ([1, 2] as const).map((n) => (
+               <article class="reveal acc-card fx-card" style={`--d:${n - 1}; --meta:${n === 1 ? 1 : 0.8}`}>
+                  <div class="flex items-center justify-between gap-4">
+                     <span class="acc-valor">{t(`acc${n}-v`)}</span>
+                     <span class="acc-icono" aria-hidden="true">
+                        {n === 1 ? (
+                           <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4M8.5 14.5l2.5 2.5 4.5-5" /></svg>
+                        ) : (
+                           <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6l1 2h3v16H5V5h3l1-2zM9 12l2 2 4-4" /></svg>
+                        )}
+                     </span>
+                  </div>
+                  <h3 class="mt-6 text-xl font-medium">{t(`acc${n}-h`)}</h3>
+                  <p class="mt-2 leading-relaxed text-ink-soft">{t(`acc${n}-p`)}</p>
+                  <!-- Barra decorativa del umbral (100% / 80%): se llena al entrar en pantalla. -->
+                  <span class="acc-barra" aria-hidden="true"><span /></span>
+               </article>
+            ))
+         }
+      </div>
+   </div>
+</section>

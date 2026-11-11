@@ -1,0 +1,62 @@
+---
+import { useT, type Lang } from "../../i18n/ui";
+import { SESIONES } from "../../i18n/landing";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const base = `/${lang}/`;
+const criterios = ["footer-a1", "footer-a2", "footer-a3", "footer-a4"] as const;
+const privacidad = import.meta.env.PUBLIC_PRIVACY_URL || "";
+---
+
+<footer class="border-t border-line bg-page">
+   <div class="container-x grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.2fr_1.3fr_1fr_1fr]">
+      <div>
+         <p class="text-[13px] font-semibold tracking-[0.2em]">HPE MASTER CLASS</p>
+         <p class="mt-4 max-w-[40ch] text-sm leading-relaxed text-ink-soft">{t("footer-desc")}</p>
+      </div>
+      <div>
+         <h2 class="text-sm font-medium">{t("footer-prog-heading")}</h2>
+         <ul class="mt-4 space-y-2.5 text-sm text-ink-soft">
+            {
+               SESIONES.map(({ n, speaker }) => (
+                  <li>
+                     <a href={`${base}#modulos`} class="transition-colors hover:text-hpe-dark">
+                        M0{n} · {t(`s${n}-short`)} · {speaker} ({t(`s${n}-date`)})
+                     </a>
+                  </li>
+               ))
+            }
+         </ul>
+      </div>
+      <div>
+         <h2 class="text-sm font-medium">{t("footer-accred-heading")}</h2>
+         <ul class="mt-4 space-y-2.5 text-sm text-ink-soft">
+            {criterios.map((k) => <li>{t(k)}</li>)}
+         </ul>
+      </div>
+      <div>
+         <h2 class="text-sm font-medium">{t("footer-part-heading")}</h2>
+         <p class="mt-4 text-sm leading-relaxed text-ink-soft">{t("footer-part-p")}</p>
+         <a href={`${base}#registro`} class="btn btn-primary btn-sm mt-5" data-track="cta" data-track-ubicacion="footer">{t("nav-cta")}</a>
+      </div>
+   </div>
+   <div class="border-t border-line">
+      <div class="container-x flex flex-col gap-2 py-6 text-xs text-muted md:flex-row md:items-center md:justify-between">
+         <p>{t("footer-copy")}</p>
+         <p class="flex flex-wrap gap-x-4 gap-y-1 md:justify-end">
+            <span>{t("footer-legal")}</span>
+            {
+               privacidad && (
+                  <a href={privacidad} target="_blank" rel="noopener noreferrer" class="underline hover:text-ink">
+                     {t("footer-privacy")}
+                  </a>
+               )
+            }
+         </p>
+      </div>
+   </div>
+</footer>

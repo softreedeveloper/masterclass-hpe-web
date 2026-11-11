@@ -1,0 +1,37 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+// Tres fuerzas del mercado (diap. 6). Sin cifras: las estadísticas de terceros están en Docs/apendice-cifras-pendientes.md.
+const fuerzas = [
+   { n: 1, icono: "M4 6h16v5H4zM4 13h16v5H4zM7 8.5h.01M7 15.5h.01" },
+   { n: 2, icono: "M7 18a4 4 0 0 1-.6-7.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7z" },
+   { n: 3, icono: "M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3zM9 12l2 2 4-4" },
+] as const;
+---
+
+<section id="proposito" class="section">
+   <div class="container-x">
+      <SectionHeader tag={t("mkt-tag")} title={t("mkt-title")} lead={t("mkt-lead")} />
+      <div class="mt-14 grid gap-4 md:grid-cols-3">
+         {
+            fuerzas.map(({ n, icono }) => (
+               <article class="reveal card card-hover spot flex flex-col p-7 md:p-8" style={`--d:${n - 1}`}>
+                  <span class="grid size-12 place-items-center rounded-2xl bg-hpe-light text-hpe-dark">
+                     <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d={icono} />
+                     </svg>
+                  </span>
+                  <h3 class="mt-6 text-xl font-medium">{t(`mkt${n}-h`)}</h3>
+                  <p class="mt-2 leading-relaxed text-ink-soft">{t(`mkt${n}-p`)}</p>
+               </article>
+            ))
+         }
+      </div>
+   </div>
+</section>

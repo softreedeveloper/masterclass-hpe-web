@@ -1,0 +1,21 @@
+---
+import Simulador from "./Simulador";
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<!-- Parte de la sección Acreditación (diap. 3: "Acreditación + simulador"); conserva el ancla #simulador. -->
+<section id="simulador" class="bg-surface pb-20 md:pb-32">
+   <div class="container-x">
+      <SectionHeader tag={t("sim-tag")} title={t("sim-title")} lead={t("sim-lead")} />
+      <div class="reveal mt-12">
+         <Simulador client:visible lang={lang} />
+      </div>
+   </div>
+</section>

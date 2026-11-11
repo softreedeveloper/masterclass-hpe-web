@@ -1,0 +1,38 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+// Íconos de trazo por perfil: edificio (dirección), apretón/enlace (comercial y alianzas), plano/servidor (preventa), brújula (consultoría).
+const iconos = [
+   '<path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16M15 9h4a1 1 0 0 1 1 1v11M3 21h18M8 8h3M8 12h3M8 16h3"/>',
+   '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2A4.5 4.5 0 0 1 21 18.5"/>',
+   '<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/>',
+   '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+];
+---
+
+<section id="audiencia" class="section">
+   <div class="container-x">
+      <SectionHeader tag={t("aud-tag")} title={t("aud-title")} lead={t("aud-lead")} />
+      <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+         {
+            ([1, 2, 3, 4] as const).map((n) => (
+               <article class="reveal perfil-card fx-card" style={`--d:${n - 1}`}>
+                  <span class="perfil-num" aria-hidden="true">0{n}</span>
+                  <span class="perfil-icono" aria-hidden="true">
+                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={iconos[n - 1]} />
+                  </span>
+                  <h3 class="relative mt-8 text-xl leading-snug font-medium">{t(`aud${n}-h`)}</h3>
+                  <p class="relative mt-2 leading-relaxed text-ink-soft">{t(`aud${n}-p`)}</p>
+                  <span class="perfil-linea" aria-hidden="true" />
+               </article>
+            ))
+         }
+      </div>
+   </div>
+</section>

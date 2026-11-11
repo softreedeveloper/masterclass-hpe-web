@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SiteNav from "../../components/landing/SiteNav.astro";
+import SiteFooter from "../../components/landing/SiteFooter.astro";
+import Hero from "../../components/landing/Hero.astro";
+import Mercado from "../../components/landing/Mercado.astro";
+import Metodologia from "../../components/landing/Metodologia.astro";
+import Audiencia from "../../components/landing/Audiencia.astro";
+import Modulos from "../../components/landing/Modulos.astro";
+import Speakers from "../../components/landing/Speakers.astro";
+import Acreditacion from "../../components/landing/Acreditacion.astro";
+import SimuladorSection from "../../components/landing/SimuladorSection.astro";
+import Faq from "../../components/landing/Faq.astro";
+import Registro from "../../components/landing/Registro.astro";
+import { LANGS, useT, type Lang } from "../../i18n/ui";
+
+export const getStaticPaths = () => LANGS.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+---
+
+<!-- Orden de la diap. 3: Inicio → Mercado → Enfoque consultivo → Para quién → Programa → Speakers → Acreditación + simulador → Preguntas + registro -->
+<BaseLayout title={t("meta-title")} description={t("meta-desc")} lang={lang}>
+   <SiteNav slot="header" lang={lang} />
+   <main>
+      <Hero lang={lang} />
+      <Mercado lang={lang} />
+      <Metodologia lang={lang} />
+      <Audiencia lang={lang} />
+      <Modulos lang={lang} />
+      <Speakers lang={lang} />
+      <Acreditacion lang={lang} />
+      <SimuladorSection lang={lang} />
+      <Faq lang={lang} />
+      <Registro lang={lang} />
+   </main>
+   <SiteFooter slot="footer" lang={lang} />
+</BaseLayout>

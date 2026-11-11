@@ -1,0 +1,43 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+// Acordeón independiente: cada respuesta se abre sola, con indicador + / −; ninguna obliga a abrir las demás.
+// Íconos de trazo por pregunta: maletín (comercial), regalo (costo), reloj (duración), insignia (acreditación),
+// reproducir (grabación), engrane (técnico).
+const iconos = [
+   '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/>',
+   '<path d="M3 9.5h18v3H3zM5 12.5V21h14v-8.5M12 9.5V21M12 9.5S10.5 4 7.5 4.5 7 9.5 12 9.5zM12 9.5s1.5-5.5 4.5-5 .5 5-4.5 5z"/>',
+   '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+   '<circle cx="12" cy="9" r="6"/><path d="M9 14.2 7.5 22l4.5-2.5 4.5 2.5-1.5-7.8M9.5 9l1.7 1.7 3.3-3.3"/>',
+   '<circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/>',
+   '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+];
+---
+
+<section id="faq" class="section">
+   <div class="container-x">
+      <SectionHeader tag={t("faq-tag")} title={t("faq-title")} />
+      <div class="faq-lista mx-auto mt-14 max-w-4xl">
+         {
+            ([1, 2, 3, 4, 5, 6] as const).map((n) => (
+               <details class="acordeon faq-item fx-card reveal group" style={`--d:${n - 1}`}>
+                  <summary class="faq-pregunta [&::-webkit-details-marker]:hidden">
+                     <span class="faq-icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={iconos[n - 1]} />
+                     </span>
+                     <span class="flex-1">{t(`faq${n}-q`)}</span>
+                     <span class="mas-menos" aria-hidden="true" />
+                  </summary>
+                  <p class="faq-respuesta">{t(`faq${n}-a`)}</p>
+               </details>
+            ))
+         }
+      </div>
+   </div>
+</section>

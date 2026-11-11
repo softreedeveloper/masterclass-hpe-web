@@ -1,0 +1,169 @@
+---
+import SectionHeader from "./SectionHeader.astro";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const pasos = [1, 2, 3] as const;
+const fases = [1, 2, 3, 4] as const;
+// Íconos de trazo: lupa (diagnóstico), capas (estrategia), documento con check (propuesta).
+const iconos = [
+   '<circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/>',
+   '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/><path d="M3 17.5l9 5 9-5" opacity=".5"/>',
+   '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14.5l2 2 4-4"/>',
+];
+---
+
+<section id="metodologias" class="section bg-surface">
+   <div class="container-x">
+      <SectionHeader tag={t("cons-tag")} title={t("cons-title")} lead={t("cons-lead")} />
+
+      <!-- Pasos diagnóstico → estrategia → propuesta como pestañas (desktop, con JS): lista con progreso a la izquierda,
+           panel del paso activo a la derecha; avanza solo hasta que el usuario interactúa. En móvil o sin JS se
+           muestran los 3 paneles apilados, así ningún contenido depende de la interacción. -->
+      <div class="pasos reveal mt-14 md:grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-10" data-pasos>
+         <div class="pasos-lista hidden md:flex" data-lista aria-label={t("cons-tag")}>
+            {
+               pasos.map((n) => {
+                  const [num, ...resto] = t(`cons${n}-h`).split(" · ");
+                  return (
+                     <button type="button" class="paso-tab" id={`paso-tab-${n}`} data-tab={n - 1} aria-controls={`paso-panel-${n}`}>
+                        <span class="paso-tab-num">{num}</span>
+                        <span class="paso-tab-texto">
+                           <span class="block text-[17px] font-medium">{resto.join(" · ")}</span>
+                           <span class="paso-tab-barra" aria-hidden="true"><span /></span>
+                        </span>
+                     </button>
+                  );
+               })
+            }
+         </div>
+         <div class="grid gap-4 md:block">
+            {
+               pasos.map((n) => {
+                  const [num, ...resto] = t(`cons${n}-h`).split(" · ");
+                  return (
+                     <section class="paso-panel fx-card" id={`paso-panel-${n}`} data-panel={n - 1} aria-labelledby={`paso-h-${n}`}>
+                        <span class="paso-panel-num" aria-hidden="true">{num}</span>
+                        <span class="paso-panel-icono" aria-hidden="true">
+                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={iconos[n - 1]} />
+                        </span>
+                        <h3 id={`paso-h-${n}`} class="relative mt-6 text-2xl font-medium text-hpe-dark md:text-3xl">
+                           <span class="sr-only">{num}. </span>
+                           {resto.join(" · ")}
+                        </h3>
+                        <p class="rich relative mt-3 max-w-[46ch] text-lg leading-relaxed text-ink-soft" set:html={t(`cons${n}-p`)} />
+                     </section>
+                  );
+               })
+            }
+         </div>
+      </div>
+
+      <div class="mt-20 grid items-start gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+         <div class="reveal">
+            <h3 class="text-2xl font-medium md:text-3xl">{t("pavis-title")}</h3>
+            <p class="mt-4 leading-relaxed text-ink-soft">{t("pavis-lead")}</p>
+         </div>
+         <div class="reveal card p-7 md:p-9" style="--d:1">
+            <p class="text-sm font-semibold tracking-[0.2em] text-hpe-dark">{t("pavis-h")}</p>
+            <p class="mt-3 leading-relaxed text-ink">{t("pavis-p")}</p>
+            <div class="mt-6 rounded-2xl bg-hpe-light p-5">
+               <p class="text-xs font-medium tracking-wide text-hpe-deep uppercase">{t("pavis-app-h")}</p>
+               <p class="mt-1 text-ink">{t("pavis-app-p")}</p>
+            </div>
+            <details class="acordeon group mt-6 border-t border-line">
+               <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 pt-5 font-medium [&::-webkit-details-marker]:hidden">
+                  {t("pavis-more")}
+                  <span class="mas-menos" aria-hidden="true"></span>
+               </summary>
+               <ol class="mt-4 space-y-4">
+                  {
+                     fases.map((n) => (
+                        <li class="border-l-2 border-hpe pl-4">
+                           <h4 class="text-sm font-medium">{t(`pavis${n}-h`)}</h4>
+                           <p class="mt-1 text-sm leading-relaxed text-ink-soft">{t(`pavis${n}-p`)}</p>
+                        </li>
+                     ))
+                  }
+               </ol>
+            </details>
+         </div>
+      </div>
+   </div>
+</section>
+
+<script>
+   // Pestañas sólo en desktop; en móvil se quitan roles y se muestran todos los paneles.
+   document.querySelectorAll<HTMLElement>("[data-pasos]").forEach((raiz) => {
+      const lista = raiz.querySelector<HTMLElement>("[data-lista]")!;
+      const tabs = [...raiz.querySelectorAll<HTMLButtonElement>("[data-tab]")];
+      const paneles = [...raiz.querySelectorAll<HTMLElement>("[data-panel]")];
+      const mq = matchMedia("(min-width: 768px)");
+      const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let activo = 0;
+      let auto = !reducido;
+
+      const mostrar = (i: number, foco = false) => {
+         activo = i;
+         tabs.forEach((t, k) => {
+            const sel = k === i;
+            t.setAttribute("aria-selected", String(sel));
+            t.tabIndex = sel ? 0 : -1;
+            t.classList.toggle("is-activo", sel);
+            if (foco && sel) t.focus();
+         });
+         paneles.forEach((p, k) => p.classList.toggle("is-activo", k === i));
+         programar();
+      };
+      // El avance lo marca el fin de la animación de la barra (7 s en CSS), que se pausa con :hover.
+      const programar = () => raiz.classList.toggle("is-auto", auto);
+      const detener = () => {
+         auto = false;
+         programar();
+      };
+      const aplicar = () => {
+         const pestañas = mq.matches;
+         raiz.classList.toggle("is-tabs", pestañas);
+         lista.setAttribute("role", pestañas ? "tablist" : "presentation");
+         tabs.forEach((t) => (pestañas ? t.setAttribute("role", "tab") : t.removeAttribute("role")));
+         paneles.forEach((p, k) => {
+            if (pestañas) {
+               p.setAttribute("role", "tabpanel");
+               p.setAttribute("aria-labelledby", `paso-tab-${k + 1}`);
+            } else {
+               p.removeAttribute("role");
+               p.setAttribute("aria-labelledby", `paso-h-${k + 1}`);
+            }
+         });
+         mostrar(activo);
+      };
+
+      tabs.forEach((t, i) => {
+         t.addEventListener("click", () => {
+            detener();
+            mostrar(i);
+         });
+         t.addEventListener("keydown", (e) => {
+            const mov = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+            if (e.key === "Home" || e.key === "End" || mov) {
+               e.preventDefault();
+               detener();
+               const n = tabs.length;
+               mostrar(e.key === "Home" ? 0 : e.key === "End" ? n - 1 : (activo + mov! + n) % n, true);
+            }
+         });
+      });
+      tabs.forEach((t) =>
+         t.querySelector(".paso-tab-barra > span")?.addEventListener("animationend", () => {
+            if (auto && mq.matches) mostrar((activo + 1) % tabs.length);
+         }),
+      );
+      raiz.addEventListener("focusin", detener);
+      mq.addEventListener("change", aplicar);
+      aplicar();
+   });
+</script>

@@ -1,0 +1,13 @@
+---
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import LoginForm from "../../components/auth/LoginForm";
+import { LANGS, useT, type Lang } from "../../i18n/ui";
+
+export const getStaticPaths = () => LANGS.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+---
+
+<AuthLayout title={t("login-title")} lang={lang}>
+   <LoginForm client:only="react" lang={lang} />
+</AuthLayout>

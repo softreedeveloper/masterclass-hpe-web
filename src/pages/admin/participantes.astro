@@ -1,0 +1,8 @@
+---
+import AppLayout from "../../layouts/AppLayout.astro";
+import ParticipantesApp from "../../components/admin/ParticipantesApp";
+---
+
+<AppLayout title="Participantes">
+   <ParticipantesApp client:only="react" />
+</AppLayout>

@@ -1,0 +1,54 @@
+---
+import { Image } from "astro:assets";
+import visual from "../../assets/isometric_market.png";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+// Datos clave (diap. 5). Íconos de trazo, sin cifras de terceros.
+const datos = [
+   ["hero-d1", '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>'],
+   ["hero-d2", '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'],
+   ["hero-d3", '<path d="M4 12a8 8 0 0 1 13.7-5.6L20 8.5M20 4v4.5h-4.5M20 12a8 8 0 0 1-13.7 5.6L4 15.5M4 20v-4.5h4.5"/>'],
+   ["hero-d4", '<path d="M3 9.5h18v3H3zM5 12.5V21h14v-8.5M12 9.5V21M12 9.5S10.5 4 7.5 4.5 7 9.5 12 9.5zM12 9.5s1.5-5.5 4.5-5 .5 5-4.5 5z"/>'],
+] as const;
+---
+
+<section id="hero" class="relative isolate overflow-hidden">
+   <div class="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+      <div class="absolute -top-[20%] right-[-10%] size-[46rem] animate-float rounded-full bg-[radial-gradient(circle,var(--glow),transparent_65%)]"></div>
+      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-page"></div>
+   </div>
+
+   <div class="container-x grid items-center gap-12 pt-12 pb-16 md:pt-20 lg:grid-cols-[1.15fr_1fr] lg:gap-16 lg:pb-24">
+      <div class="hero-stage min-w-0">
+         <p class="section-tag"><span class="h-px w-6 bg-hpe" aria-hidden="true"></span>{t("hero-eyebrow")}</p>
+         <h1 class="mt-6 text-[clamp(2.6rem,6vw,4.75rem)] leading-[1.02] font-medium tracking-[-0.04em]">{t("hero-title")}</h1>
+         <p class="mt-6 max-w-[54ch] text-lg leading-relaxed text-ink-soft md:text-xl">{t("hero-desc")}</p>
+         <!-- Orden de la diap. 5: Inicio · 6 sesiones, 1 hora c/u · Quincenales · Sin costo por invitación -->
+         <ul class="hero-datos mt-9 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {
+               datos.map(([clave, icono], i) => (
+                  <li class="dato-card" style={`--i:${i}`}>
+                     <span class="dato-icono" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" set:html={icono} />
+                     </span>
+                     <span class="relative text-[15px] leading-snug whitespace-pre-line text-ink">{t(clave)}</span>
+                  </li>
+               ))
+            }
+         </ul>
+         <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <a href="#registro" class="btn btn-primary px-7 py-3.5" data-track="cta" data-track-ubicacion="hero">{t("hero-cta-primary")}</a>
+            <a href="#modulos" class="btn btn-secondary px-7 py-3.5">{t("hero-cta-secondary")}</a>
+         </div>
+      </div>
+      <div class="hero-visual relative overflow-hidden rounded-3xl border border-line bg-surface">
+         <Image src={visual} alt={t("hero-img-alt")} width={760} class="w-full" loading="eager" />
+      </div>
+   </div>
+</section>
+

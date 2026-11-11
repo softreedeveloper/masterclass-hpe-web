@@ -1,0 +1,13 @@
+---
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import RestablecerForm from "../../components/auth/RestablecerForm";
+import { LANGS, useT, type Lang } from "../../i18n/ui";
+
+export const getStaticPaths = () => LANGS.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+---
+
+<AuthLayout title={t("reset-title")} lang={lang}>
+   <RestablecerForm client:only="react" lang={lang} />
+</AuthLayout>

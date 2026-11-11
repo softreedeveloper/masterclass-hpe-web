@@ -1,0 +1,23 @@
+---
+import RegistroForm from "./RegistroForm";
+import { useT, type Lang } from "../../i18n/ui";
+
+interface Props {
+   lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<section id="registro" class="section bg-surface">
+   <div class="container-x grid items-start gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
+      <div class="lg:sticky lg:top-28">
+         <span class="section-tag"><span class="h-px w-6 bg-hpe" aria-hidden="true"></span>{t("reg-tag")}</span>
+         <h2 class="section-title">{t("reg-title")}</h2>
+         <p class="mt-5 max-w-[52ch] text-lg leading-relaxed text-ink-soft">{t("reg-lead")}</p>
+      </div>
+      <div>
+         <RegistroForm client:load lang={lang} />
+      </div>
+   </div>
+</section>

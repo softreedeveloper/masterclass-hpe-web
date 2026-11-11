@@ -1,0 +1,13 @@
+---
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import RecuperarForm from "../../components/auth/RecuperarForm";
+import { LANGS, useT, type Lang } from "../../i18n/ui";
+
+export const getStaticPaths = () => LANGS.map((lang) => ({ params: { lang } }));
+const lang = Astro.params.lang as Lang;
+const t = useT(lang);
+---
+
+<AuthLayout title={t("forgot-title")} lang={lang}>
+   <RecuperarForm client:only="react" lang={lang} />
+</AuthLayout>

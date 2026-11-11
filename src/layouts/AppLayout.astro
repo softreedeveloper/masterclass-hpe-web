@@ -1,0 +1,14 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+   title: string;
+}
+const { title } = Astro.props;
+---
+
+<BaseLayout title={`${title} | MasterClass HPE`} lang="es" noindex>
+   <main class="min-h-[70vh] bg-page">
+      <slot />
+   </main>
+</BaseLayout>

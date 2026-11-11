@@ -1,0 +1,143 @@
+---
+import "../styles/global.css";
+
+interface Props {
+   title: string;
+   description?: string;
+   lang?: "es" | "en";
+   noindex?: boolean;
+   hpeChrome?: boolean;
+}
+const {
+   title,
+   description = "HPE Master Class: seis sesiones sin costo, por invitación, sobre virtualización, nube híbrida y soluciones de datos para el ecosistema de canales.",
+   lang = "es",
+   noindex = false,
+   hpeChrome = true,
+} = Astro.props;
+const gtm = import.meta.env.PUBLIC_GTM_ID || "";
+---
+
+<!doctype html>
+<html lang={lang}>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
+      <link rel="icon" type="image/png" href="/favicon.png" />
+      <link rel="preload" href="/fonts/HPEGraphik-Regular.woff2" as="font" type="font/woff2" crossorigin />
+      <link rel="preload" href="/fonts/HPEGraphik-Medium.woff2" as="font" type="font/woff2" crossorigin />
+      <meta name="theme-color" content="#ffffff" />
+      {
+         gtm && (
+            <script is:inline define:vars={{ gtm }}>
+               (function (w, d, s, l, i) {
+                  w[l] = w[l] || [];
+                  w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+                  var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+                  j.async = true;
+                  j.src = "https://www.googletagmanager.com/gtm.js?id=" + i;
+                  f.parentNode.insertBefore(j, f);
+               })(window, document, "script", "dataLayer", gtm);
+            </script>
+         )
+      }
+      <script is:inline>
+         // Antes de pintar: tema guardado o del sistema (evita parpadeo) y bandera de movimiento.
+         (function () {
+            var d = document.documentElement;
+            var guardado = null;
+            try { guardado = localStorage.getItem("theme"); } catch (e) {}
+            var mq = window.matchMedia("(prefers-color-scheme: dark)");
+            var aplicar = function (oscuro) {
+               d.classList.toggle("dark", oscuro);
+               var m = document.querySelector('meta[name="theme-color"]');
+               if (m) m.setAttribute("content", oscuro ? "#0a0d11" : "#ffffff");
+            };
+            aplicar(guardado ? guardado === "dark" : mq.matches);
+            mq.addEventListener("change", function (e) {
+               var g = null;
+               try { g = localStorage.getItem("theme"); } catch (x) {}
+               if (!g) aplicar(e.matches);
+            });
+            if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) d.classList.add("motion");
+         })();
+      </script>
+   </head>
+   <body class="flex min-h-screen flex-col">
+      {hpeChrome && <div id="hpe_slim_header"></div>}
+      <slot name="header" />
+      <div class="flex-1">
+         <slot />
+      </div>
+      <slot name="footer" />
+      <script>
+         import { track } from "../lib/track";
+         // Aparición al hacer scroll (sólo con <html class="motion">; sin JS o con movimiento reducido todo queda visible).
+         const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+         if ("IntersectionObserver" in window) {
+            const io = new IntersectionObserver(
+               (entradas) => {
+                  for (const e of entradas) {
+                     if (!e.isIntersecting) continue;
+                     e.target.classList.add("is-in");
+                     io.unobserve(e.target);
+                  }
+               },
+               { rootMargin: "0px 0px -8% 0px", threshold: 0.1 },
+            );
+            document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+         } else {
+            document.documentElement.classList.remove("motion");
+         }
+
+         // Brillo que sigue al cursor en tarjetas con efecto (sólo puntero fino; decorativo).
+         if (!reducido && matchMedia("(hover: hover) and (pointer: fine)").matches) {
+            document.querySelectorAll<HTMLElement>(".dato-card, .fx-card").forEach((c) =>
+               c.addEventListener("pointermove", (e) => {
+                  const r = c.getBoundingClientRect();
+                  c.style.setProperty("--mx", `${e.clientX - r.left}px`);
+                  c.style.setProperty("--my", `${e.clientY - r.top}px`);
+               }),
+            );
+         }
+
+         // Medición: clic en cualquier CTA marcado con data-track (un solo listener delegado).
+         document.addEventListener("click", (e) => {
+            const el = (e.target as Element | null)?.closest?.<HTMLElement>("[data-track]");
+            if (!el) return;
+            track("cta_click", { ubicacion: el.dataset.trackUbicacion, destino: el.getAttribute("href") ?? undefined, idioma: document.documentElement.lang });
+         });
+
+         // Spotlight de cards: un solo listener delegado (sirve también para cards que monta React).
+         if (!reducido && matchMedia("(hover: hover)").matches) {
+            document.addEventListener(
+               "pointermove",
+               (e) => {
+                  const card = (e.target as Element | null)?.closest?.<HTMLElement>(".spot");
+                  if (!card) return;
+                  const r = card.getBoundingClientRect();
+                  card.style.setProperty("--mx", `${e.clientX - r.left}px`);
+                  card.style.setProperty("--my", `${e.clientY - r.top}px`);
+               },
+               { passive: true },
+            );
+         }
+      </script>
+      {hpeChrome && <div id="hpe_slim_footer"></div>}
+      {
+         hpeChrome && (
+            <Fragment>
+               {/* Header y footer corporativos proporcionados por el cliente. */}
+               <script is:inline src="https://h50007.www5.hpe.com/hfws-static/js/framework/jquery/v-3-6-0/jquery.js" />
+               <script
+                  is:inline
+                  src="https://h50007.www5.hpe.com/hfws/us/en/hpe/latest.r/root?contentType=js&switchToCHF=true&slim_footer=true"
+               />
+            </Fragment>
+         )
+      }
+   </body>
+</html>
