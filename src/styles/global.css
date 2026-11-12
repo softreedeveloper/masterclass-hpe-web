@@ -250,8 +250,11 @@
    }
 }
 
-/* ===== Header/footer corporativo HPE: siempre en su tema claro original ===== */
-#hpe_slim_header, #hpe_slim_footer { position: relative; z-index: 40; background: #fff; color-scheme: light; }
+/* ===== Footer corporativo HPE: siempre en su tema claro original ===== */
+#hpe_slim_footer { position: relative; z-index: 40; background: #fff; color-scheme: light; }
+/* Sólo se conserva el footer (indicación del cliente). El script de HPE crea #hpe_slim_header aunque
+   no exista en el HTML, así que se oculta por CSS. */
+#hpe_slim_header, #hpehf-header { display: none !important; }
 
 /* ===== Movimiento ===== */
 @keyframes float {

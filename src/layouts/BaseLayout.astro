@@ -67,7 +67,7 @@ const gtm = import.meta.env.PUBLIC_GTM_ID || "";
       </script>
    </head>
    <body class="flex min-h-screen flex-col">
-      {hpeChrome && <div id="hpe_slim_header"></div>}
+      {/* Sin header corporativo de HPE (sólo footer), por indicación del cliente: el script lo pinta en #hpe_slim_header si existe. */}
       <slot name="header" />
       <div class="flex-1">
          <slot />
