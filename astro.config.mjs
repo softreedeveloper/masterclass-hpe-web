@@ -6,6 +6,11 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
    output: "static",
    trailingSlash: "ignore",
+   // El panel admin sólo consulta registros: Resumen y Clases se retiraron (2026-11-12).
+   redirects: {
+      "/admin": "/admin/participantes",
+      "/admin/clases": "/admin/participantes",
+   },
    integrations: [react()],
    vite: { plugins: [tailwindcss()] },
       server: {

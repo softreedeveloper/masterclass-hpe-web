@@ -1,16 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, descargar, mensajeError, qs } from "../../lib/api";
 import { CANALES, PUESTOS, fecha } from "../../lib/formato";
-import type { Curso, Pagina, ParticipanteFila } from "../../lib/types";
+import type { Pagina, ParticipanteFila } from "../../lib/types";
 import { AppFrame, PageTitle } from "../ui/AppFrame";
 import { Alert } from "../ui/Alert";
 import { Badge } from "../ui/Badge";
 import { Input, Select } from "../ui/Field";
-import { Modal } from "../ui/Modal";
 import { Spinner } from "../ui/Spinner";
-import { AsignarClase } from "./AsignarClase";
 
-const FILTROS_VACIOS = { q: "", empresa: "", puesto: "", canal: "", id_course: "", activo: "", verificado: "" };
+const FILTROS_VACIOS = { q: "", empresa: "", puesto: "", canal: "", activo: "", verificado: "" };
 type Filtros = typeof FILTROS_VACIOS;
 
 // Los filtros viven en la URL: se pueden compartir y sobreviven a recargar.
@@ -24,11 +22,8 @@ function Listado() {
    const [borrador, setBorrador] = useState<Filtros>(filtros);
    const [page, setPage] = useState(() => Number(new URLSearchParams(window.location.search).get("page")) || 1);
    const [data, setData] = useState<Pagina<ParticipanteFila> | null>(null);
-   const [cursos, setCursos] = useState<Curso[]>([]);
    const [error, setError] = useState<string | null>(null);
    const [cargando, setCargando] = useState(true);
-   const [seleccion, setSeleccion] = useState<Set<number>>(new Set());
-   const [asignando, setAsignando] = useState(false);
    const [exportando, setExportando] = useState<string | null>(null);
 
    const cargar = useCallback(() => {
@@ -45,21 +40,16 @@ function Listado() {
    }, [filtros, page]);
 
    useEffect(cargar, [cargar]);
-   useEffect(() => {
-      api<Curso[]>("/cursos").then(setCursos).catch(() => {});
-   }, []);
 
    const aplicar = (e: { preventDefault(): void }) => {
       e.preventDefault();
       setPage(1);
-      setSeleccion(new Set());
       setFiltros(borrador);
    };
    const limpiar = () => {
       setBorrador(FILTROS_VACIOS);
       setFiltros(FILTROS_VACIOS);
       setPage(1);
-      setSeleccion(new Set());
    };
    const exportar = async (formato: "xlsx" | "csv") => {
       setExportando(formato);
@@ -72,18 +62,7 @@ function Listado() {
       }
    };
    const set = (k: keyof Filtros) => (e: { target: { value: string } }) => setBorrador({ ...borrador, [k]: e.target.value });
-   const toggle = (id: number) => {
-      const s = new Set(seleccion);
-      s.has(id) ? s.delete(id) : s.add(id);
-      setSeleccion(s);
-   };
    const items = data?.items ?? [];
-   const todos = items.length > 0 && items.every((i) => seleccion.has(i.id_user));
-   const toggleTodos = () => {
-      const s = new Set(seleccion);
-      items.forEach((i) => (todos ? s.delete(i.id_user) : s.add(i.id_user)));
-      setSeleccion(s);
-   };
 
    return (
       <>
@@ -120,14 +99,6 @@ function Listado() {
                   </option>
                ))}
             </Select>
-            <Select label="Clase" value={borrador.id_course} onChange={set("id_course")}>
-               <option value="">Todas</option>
-               {cursos.map((c) => (
-                  <option key={c.id_course} value={c.id_course}>
-                     {c.titulo}
-                  </option>
-               ))}
-            </Select>
             <Select label="Cuenta" value={borrador.verificado} onChange={set("verificado")}>
                <option value="">Todas</option>
                <option value="true">Activada</option>
@@ -146,36 +117,18 @@ function Listado() {
             </div>
          </form>
 
-         {seleccion.size > 0 && (
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-inverse px-5 py-3 text-sm text-on-inverse animate-[fade-up_.35s_cubic-bezier(.16,1,.3,1)]">
-               <span>{seleccion.size} seleccionado(s)</span>
-               <div className="flex gap-2">
-                  <button onClick={() => setSeleccion(new Set())} className="btn btn-sm text-on-inverse hover:bg-white/10">
-                     Quitar selección
-                  </button>
-                  <button onClick={() => setAsignando(true)} className="btn btn-primary btn-sm">
-                     Inscribir en clase
-                  </button>
-               </div>
-            </div>
-         )}
-
          {error && <Alert tipo="error">{error}</Alert>}
          {cargando && !data ? (
             <Spinner />
          ) : (
             <div className="card overflow-hidden">
                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[860px] text-left text-sm">
+                  <table className="w-full min-w-[760px] text-left text-sm">
                      <thead className="border-b border-line text-xs tracking-wide text-muted uppercase">
                         <tr>
-                           <th className="w-10 px-4 py-3">
-                              <input type="checkbox" checked={todos} onChange={toggleTodos} aria-label="Seleccionar página" className="accent-hpe" />
-                           </th>
                            <th className="px-4 py-3 font-medium">Participante</th>
                            <th className="px-4 py-3 font-medium">Empresa / Puesto</th>
                            <th className="px-4 py-3 font-medium">Canal</th>
-                           <th className="px-4 py-3 font-medium">Clases</th>
                            <th className="px-4 py-3 font-medium">Estatus</th>
                            <th className="px-4 py-3 font-medium">Registro</th>
                         </tr>
@@ -183,15 +136,6 @@ function Listado() {
                      <tbody className={`stagger divide-y divide-line transition-opacity duration-300 ${cargando ? "opacity-40" : ""}`}>
                         {items.map((p) => (
                            <tr key={p.id_user} className="transition-colors hover:bg-surface">
-                              <td className="px-4 py-3">
-                                 <input
-                                    type="checkbox"
-                                    checked={seleccion.has(p.id_user)}
-                                    onChange={() => toggle(p.id_user)}
-                                    aria-label={`Seleccionar ${p.nombre_completo}`}
-                                    className="accent-hpe"
-                                 />
-                              </td>
                               <td className="px-4 py-3">
                                  <a href={`/admin/participante?id=${p.id_user}`} className="font-medium text-ink hover:text-hpe-dark hover:underline">
                                     {p.nombre_completo}
@@ -206,9 +150,6 @@ function Listado() {
                                  {p.canal_invitacion ? CANALES[p.canal_invitacion] : "—"}
                                  {p.contacto_referido && <p className="text-muted">{p.contacto_referido}</p>}
                               </td>
-                              <td className="px-4 py-3" title={p.clases ?? ""}>
-                                 {p.total_clases}
-                              </td>
                               <td className="space-x-1 px-4 py-3">
                                  {p.email_verificado_at ? <Badge tono="green">Activada</Badge> : <Badge tono="amber">Pendiente</Badge>}
                                  {!p.activo && <Badge tono="red">Inactivo</Badge>}
@@ -218,7 +159,7 @@ function Listado() {
                         ))}
                         {!items.length && (
                            <tr>
-                              <td colSpan={7} className="px-4 py-12 text-center text-muted">
+                              <td colSpan={5} className="px-4 py-12 text-center text-muted">
                                  No hay participantes con estos filtros.
                               </td>
                            </tr>
@@ -244,9 +185,6 @@ function Listado() {
             </div>
          )}
 
-         <Modal abierto={asignando} titulo="Inscribir en clase" onClose={() => setAsignando(false)}>
-            <AsignarClase idsUser={[...seleccion]} onListo={cargar} />
-         </Modal>
       </>
    );
 }

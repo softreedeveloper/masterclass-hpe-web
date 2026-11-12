@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, mensajeError } from "../../lib/api";
 import { CANALES, PUESTOS, fechaHora } from "../../lib/formato";
-import type { Inscripcion, Usuario } from "../../lib/types";
+import type { Usuario } from "../../lib/types";
 import { AppFrame, PageTitle } from "../ui/AppFrame";
 import { Alert } from "../ui/Alert";
 import { Badge } from "../ui/Badge";
 import { Modal } from "../ui/Modal";
 import { Spinner } from "../ui/Spinner";
 import { PerfilForm } from "../cuenta/PerfilForm";
-import { AsignarClase } from "./AsignarClase";
 
-type Detalle = Usuario & { inscripciones: Inscripcion[] };
+type Detalle = Usuario;
 
 function Contenido({ id }: { id: number }) {
    const [p, setP] = useState<Detalle | null>(null);
    const [error, setError] = useState<string | null>(null);
    const [aviso, setAviso] = useState<string | null>(null);
-   const [asignando, setAsignando] = useState(false);
    const [editando, setEditando] = useState(false);
 
    const cargar = useCallback(() => {
@@ -39,15 +37,6 @@ function Contenido({ id }: { id: number }) {
          setError(mensajeError(e));
       }
    };
-   const estatusInscripcion = async (i: Inscripcion, estatus: "INSCRITO" | "CANCELADO") => {
-      try {
-         await api(`/cursos/${i.id_course}/inscripciones/${id}`, "PATCH", { estatus });
-         cargar();
-      } catch (e) {
-         setAviso(mensajeError(e));
-      }
-   };
-
    const datos: [string, string][] = [
       ["Correo", p.email],
       ["Empresa", p.empresa ?? "—"],
@@ -88,7 +77,7 @@ function Contenido({ id }: { id: number }) {
                <Alert tipo="info">{aviso}</Alert>
             </div>
          )}
-         <div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+         <div className="max-w-3xl">
             <section className="card h-fit p-6">
                <h2 className="mb-4 text-lg font-medium">Información</h2>
                <dl className="divide-y divide-line text-sm">
@@ -99,39 +88,6 @@ function Contenido({ id }: { id: number }) {
                      </div>
                   ))}
                </dl>
-            </section>
-            <section className="card h-fit p-6">
-               <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-lg font-medium">Inscripciones</h2>
-                  <button onClick={() => setAsignando(true)} className="btn btn-primary btn-sm">
-                     Inscribir en clase
-                  </button>
-               </div>
-               {p.inscripciones.length ? (
-                  <ul className="divide-y divide-line">
-                     {p.inscripciones.map((i) => (
-                        <li key={i.id_enrollment} className="flex flex-wrap items-center gap-3 py-3 text-sm">
-                           <div className="flex-1">
-                              <p className="font-medium">{i.titulo}</p>
-                              <p className="text-xs text-muted">{fechaHora(i.fecha_inicio)}</p>
-                           </div>
-                           {!i.activo && <Badge tono="red">Clase inactiva</Badge>}
-                           <Badge tono={i.estatus === "INSCRITO" ? "green" : "gray"}>{i.estatus === "INSCRITO" ? "Inscrito" : "Cancelado"}</Badge>
-                           {i.estatus === "INSCRITO" ? (
-                              <button onClick={() => estatusInscripcion(i, "CANCELADO")} className="text-xs text-danger hover:underline">
-                                 Cancelar
-                              </button>
-                           ) : (
-                              <button onClick={() => estatusInscripcion(i, "INSCRITO")} className="text-xs text-hpe-dark hover:underline">
-                                 Reinscribir
-                              </button>
-                           )}
-                        </li>
-                     ))}
-                  </ul>
-               ) : (
-                  <p className="text-sm text-muted">Sin inscripciones.</p>
-               )}
             </section>
          </div>
          <Modal abierto={editando} titulo="Editar participante" onClose={() => setEditando(false)} ancho="max-w-2xl">
@@ -145,9 +101,6 @@ function Contenido({ id }: { id: number }) {
                   setAviso("Datos actualizados.");
                }}
             />
-         </Modal>
-         <Modal abierto={asignando} titulo="Inscribir en clase" onClose={() => setAsignando(false)}>
-            <AsignarClase idsUser={[id]} onListo={cargar} />
          </Modal>
       </>
    );

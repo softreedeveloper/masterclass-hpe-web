@@ -12,7 +12,7 @@ export function useSesion(rol?: Rol) {
       api<Usuario>("/auth/me")
          .then((u) => {
             if (rol && u.rol !== rol) {
-               window.location.replace(u.rol === "ADMIN" ? "/admin" : "/cuenta");
+               window.location.replace(u.rol === "ADMIN" ? "/admin/participantes" : "/cuenta");
                return;
             }
             setUsuario(u);
@@ -45,5 +45,5 @@ export const destinoSeguro = (next: string | null, rol: Rol) =>
    next && /^\/(?!\/)[\w\-/?=&%.]*$/.test(next) && !next.startsWith("/es/login") && !next.startsWith("/en/login")
       ? next
       : rol === "ADMIN"
-        ? "/admin"
+        ? "/admin/participantes"
         : "/cuenta";

@@ -8,11 +8,8 @@ interface Props {
    actual: string;
 }
 
-const LINKS_ADMIN = [
-   { href: "/admin", texto: "Resumen" },
-   { href: "/admin/participantes", texto: "Participantes" },
-   { href: "/admin/clases", texto: "Clases" },
-];
+// El panel admin sólo consulta y exporta registros de la landing.
+const LINKS_ADMIN = [{ href: "/admin/participantes", texto: "Participantes" }];
 
 const iniciales = (nombre: string | null, email: string) =>
    (nombre || email)
@@ -24,12 +21,12 @@ const iniciales = (nombre: string | null, email: string) =>
 export function AppHeader({ usuario, actual }: Props) {
    const [abierto, setAbierto] = useState(false);
    const links = usuario.rol === "ADMIN" ? LINKS_ADMIN : [{ href: "/cuenta", texto: "Mi cuenta" }];
-   const activo = (href: string) => (href === "/admin" ? actual === href : actual.startsWith(href));
+   const activo = (href: string) => actual.startsWith(href);
    return (
       <header className="sticky top-0 z-30 border-b border-line bg-[var(--nav-bg)] backdrop-blur-xl backdrop-saturate-150">
          <div className="container-x flex h-16 items-center justify-between gap-4">
             <div className="flex items-center gap-8">
-               <a href={usuario.rol === "ADMIN" ? "/admin" : "/cuenta"} className="flex items-center gap-3">
+               <a href={usuario.rol === "ADMIN" ? "/admin/participantes" : "/cuenta"} className="flex items-center gap-3">
                   <span className="grid size-8 place-items-center rounded-[9px] bg-hpe">
                      <span className="size-2.5 rounded-full bg-on-hpe" />
                   </span>
