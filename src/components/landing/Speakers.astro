@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import SectionHeader from "./SectionHeader.astro";
 import { useT, type Lang } from "../../i18n/ui";
 import { SESIONES } from "../../i18n/landing";
@@ -37,7 +38,7 @@ const speakers = SESIONES.map(({ n, speaker }) => {
                <li class="reveal" style={`--d:${(n - 1) % 3}`}>
                   <button type="button" class="spk-card fx-card" data-abre-speaker={`spk-modal-${n}`} aria-haspopup="dialog">
                      <span class="spk-avatar" aria-hidden="true">
-                        {foto ? <img src={foto} alt="" class="size-full object-cover" /> : ini}
+                        {foto ? <Image src={foto} alt="" width={128} height={128} loading="lazy" class="spk-foto" /> : ini}
                      </span>
                      <span class="min-w-0 flex-1 text-left">
                         <span class="block text-lg font-medium">{nombre}</span>
@@ -63,7 +64,7 @@ const speakers = SESIONES.map(({ n, speaker }) => {
          <dialog id={`spk-modal-${n}`} class="spk-modal" aria-labelledby={`spk-modal-${n}-h`}>
             <div class="spk-modal-cabecera">
                <span class="spk-avatar spk-avatar-lg" aria-hidden={foto ? undefined : "true"}>
-                  {foto ? <img src={foto} alt={t("spk-foto-alt").replace("{nombre}", nombre)} class="size-full object-cover" /> : ini}
+                  {foto ? <Image src={foto} alt={t("spk-foto-alt").replace("{nombre}", nombre)} width={176} height={176} loading="lazy" class="spk-foto" /> : ini}
                </span>
                <div class="min-w-0">
                   {PERFILES_PRELIMINARES && <span class="spk-chip">{t("spk-preliminar")}</span>}

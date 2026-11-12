@@ -403,6 +403,8 @@
    box-shadow: 0 0 0 0 color-mix(in oklab, var(--hpe) 30%, transparent); transition: box-shadow 0.5s var(--ease-out-expo), background-color 0.4s, color 0.4s;
 }
 .spk-avatar-lg { width: 5.5rem; height: 5.5rem; font-size: 1.6rem; }
+/* Fotos cuadradas de medio cuerpo: se encuadra la cara (tercio superior). */
+.spk-foto { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transform: scale(1.35); transform-origin: 50% 25%; }
 .spk-ver { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.75rem; font-size: 0.8rem; font-weight: 600; color: var(--hpe-text); }
 .spk-ver svg { width: 0.9rem; height: 0.9rem; transition: transform 0.4s var(--ease-out-expo); }
 .spk-card:hover .spk-avatar, .spk-card:focus-visible .spk-avatar { background: var(--hpe); color: var(--on-hpe); box-shadow: 0 0 0 6px color-mix(in oklab, var(--hpe) 18%, transparent); }
