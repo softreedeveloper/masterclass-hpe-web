@@ -1,5 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import { useT, type Lang } from "../../i18n/ui";
+import logoPos from "../../assets/hpe-logo.png";
+import logoRev from "../../assets/hpe-logo-rev.png";
 import { SESIONES } from "../../i18n/landing";
 
 interface Props {
@@ -15,7 +18,12 @@ const privacidad = import.meta.env.PUBLIC_PRIVACY_URL || "";
 <footer class="border-t border-line bg-page">
    <div class="container-x grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-[1.2fr_1.3fr_1fr_1fr]">
       <div>
-         <p class="text-[13px] font-semibold tracking-[0.2em]">HPE MASTER CLASS</p>
+         <p class="flex items-center gap-3">
+            <Image src={logoPos} alt="HPE" width={168} class="h-6 w-auto dark:hidden" />
+            <Image src={logoRev} alt="HPE" width={168} class="hidden h-6 w-auto dark:block" />
+            <span class="h-6 w-px bg-line" aria-hidden="true"></span>
+            <span class="text-[13px] font-semibold tracking-[0.2em]">MASTER CLASS</span>
+         </p>
          <p class="mt-4 max-w-[40ch] text-sm leading-relaxed text-ink-soft">{t("footer-desc")}</p>
       </div>
       <div>

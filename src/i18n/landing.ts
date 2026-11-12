@@ -30,7 +30,7 @@ export const landing = {
       "hero-d4": "Sin costo\npor invitación",
       "hero-cta-primary": "Regístrate",
       "hero-cta-secondary": "Conoce el programa",
-      "hero-img-alt": "Ilustración de infraestructura híbrida: centro de datos conectado con la nube",
+      "hero-img-alt": "Un especialista presenta frente a racks de servidores HPE ante un grupo de asistentes",
 
       "mkt-tag": "Mercado y fuentes",
       "mkt-title": "La infraestructura evoluciona y las decisiones también",
@@ -142,7 +142,7 @@ export const landing = {
       "spk-preliminar": "Perfil preliminar",
       "spk-cargo-gen": "Ejecutivo/a de HPE · cargo por confirmar",
       "spk-bio-gen":
-         "Integrante del equipo de HPE. En la Master Class lidera la sesión «{titulo}», donde comparte su experiencia y perspectiva para el ecosistema de canales. La biografía completa, el cargo oficial y la fotografía se publicarán cuando HPE los apruebe.",
+         "Integrante del equipo de HPE. En la Master Class lidera la sesión «{titulo}», donde comparte su experiencia y perspectiva para el ecosistema de canales. La biografía completa y el cargo oficial se publicarán cuando HPE los apruebe.",
       "spk-foto-alt": "Fotografía de {nombre}",
 
       "acc-tag": "Acreditación",
@@ -272,7 +272,7 @@ export const landing = {
       "hero-d4": "No cost\nby invitation",
       "hero-cta-primary": "Register",
       "hero-cta-secondary": "Explore the program",
-      "hero-img-alt": "Illustration of hybrid infrastructure: a data center connected to the cloud",
+      "hero-img-alt": "A specialist presents in front of HPE server racks to a group of attendees",
 
       "mkt-tag": "Market and sources",
       "mkt-title": "Infrastructure is evolving, and so are decisions",
@@ -384,7 +384,7 @@ export const landing = {
       "spk-preliminar": "Preliminary profile",
       "spk-cargo-gen": "HPE executive · title to be confirmed",
       "spk-bio-gen":
-         "Member of the HPE team. In the Master Class, leads the session “{titulo}”, sharing experience and perspective for the channel ecosystem. The full biography, official title and photo will be published once approved by HPE.",
+         "Member of the HPE team. In the Master Class, leads the session “{titulo}”, sharing experience and perspective for the channel ecosystem. The full biography and official title will be published once approved by HPE.",
       "spk-foto-alt": "Photo of {nombre}",
 
       "acc-tag": "Accreditation",

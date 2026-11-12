@@ -2,6 +2,8 @@ import { useState } from "react";
 import { cerrarSesion } from "../../lib/sesion";
 import type { Usuario } from "../../lib/types";
 import { ThemeToggleButton } from "./ThemeToggleButton";
+import logoPos from "../../assets/hpe-logo.png";
+import logoRev from "../../assets/hpe-logo-rev.png";
 
 interface Props {
    usuario: Usuario;
@@ -27,9 +29,9 @@ export function AppHeader({ usuario, actual }: Props) {
          <div className="container-x flex h-16 items-center justify-between gap-4">
             <div className="flex items-center gap-8">
                <a href={usuario.rol === "ADMIN" ? "/admin/participantes" : "/cuenta"} className="flex items-center gap-3">
-                  <span className="grid size-8 place-items-center rounded-[9px] bg-hpe">
-                     <span className="size-2.5 rounded-full bg-on-hpe" />
-                  </span>
+                  <img src={logoPos.src} alt="HPE" width={77} height={22} className="h-[22px] w-auto dark:hidden" />
+                  <img src={logoRev.src} alt="HPE" width={77} height={22} className="hidden h-[22px] w-auto dark:block" />
+                  <span className="h-7 w-px bg-line" aria-hidden="true" />
                   <span className="leading-tight">
                      <span className="block text-xs font-semibold tracking-[0.2em]">MASTER CLASS</span>
                      <span className="block text-[11px] text-muted">
