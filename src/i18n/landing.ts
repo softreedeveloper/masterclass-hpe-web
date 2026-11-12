@@ -30,7 +30,7 @@ export const landing = {
       "hero-d4": "Sin costo\npor invitación",
       "hero-cta-primary": "Regístrate",
       "hero-cta-secondary": "Conoce el programa",
-      "hero-img-alt": "Ilustración de infraestructura híbrida: centro de datos conectado con la nube",
+      "hero-img-alt": "Un especialista presenta frente a racks de servidores HPE ante un grupo de asistentes",
 
       "mkt-tag": "Mercado y fuentes",
       "mkt-title": "La infraestructura evoluciona y las decisiones también",
@@ -272,7 +272,7 @@ export const landing = {
       "hero-d4": "No cost\nby invitation",
       "hero-cta-primary": "Register",
       "hero-cta-secondary": "Explore the program",
-      "hero-img-alt": "Illustration of hybrid infrastructure: a data center connected to the cloud",
+      "hero-img-alt": "A specialist presents in front of HPE server racks to a group of attendees",
 
       "mkt-tag": "Market and sources",
       "mkt-title": "Infrastructure is evolving, and so are decisions",
