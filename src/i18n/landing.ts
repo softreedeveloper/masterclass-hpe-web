@@ -142,7 +142,7 @@ export const landing = {
       "spk-preliminar": "Perfil preliminar",
       "spk-cargo-gen": "Ejecutivo/a de HPE · cargo por confirmar",
       "spk-bio-gen":
-         "Integrante del equipo de HPE. En la Master Class lidera la sesión «{titulo}», donde comparte su experiencia y perspectiva para el ecosistema de canales. La biografía completa, el cargo oficial y la fotografía se publicarán cuando HPE los apruebe.",
+         "Integrante del equipo de HPE. En la Master Class lidera la sesión «{titulo}», donde comparte su experiencia y perspectiva para el ecosistema de canales. La biografía completa y el cargo oficial se publicarán cuando HPE los apruebe.",
       "spk-foto-alt": "Fotografía de {nombre}",
 
       "acc-tag": "Acreditación",
@@ -384,7 +384,7 @@ export const landing = {
       "spk-preliminar": "Preliminary profile",
       "spk-cargo-gen": "HPE executive · title to be confirmed",
       "spk-bio-gen":
-         "Member of the HPE team. In the Master Class, leads the session “{titulo}”, sharing experience and perspective for the channel ecosystem. The full biography, official title and photo will be published once approved by HPE.",
+         "Member of the HPE team. In the Master Class, leads the session “{titulo}”, sharing experience and perspective for the channel ecosystem. The full biography and official title will be published once approved by HPE.",
       "spk-foto-alt": "Photo of {nombre}",
 
       "acc-tag": "Accreditation",
